@@ -162,22 +162,27 @@ void kfree(void *ptr) {
     heap_segment_t * seg;
 
     if (!ptr)
+    {
         return;
+    }
 
     seg = ptr - sizeof(heap_segment_t);
     seg->is_allocated = 0;
 
     // try to coalesce segements to the left
-    while(seg->prev != NULL && !seg->prev->is_allocated) {
+    while(seg->prev != NULL && !seg->prev->is_allocated)
+    {
         seg->prev->next = seg->next;
         seg->next->prev = seg->prev;
         seg->prev->segment_size += seg->segment_size;
         seg = seg->prev;
     }
     // try to coalesce segments to the right
-    while(seg->next != NULL && !seg->next->is_allocated) {
+    while(seg->next != NULL && !seg->next->is_allocated) 
+    {
         seg->next->next->prev = seg;
         seg->next = seg->next->next;
         seg->segment_size += seg->next->segment_size;
+	seg = seg->next;
     }
 }

@@ -7,6 +7,6 @@ uint32_t get_mem_size(atag_t * tag) {
        }
        tag = (atag_t *)(((uint32_t *)tag) + tag->tag_size);
    }
-   return 0;
+   return (1024*1024*256);
 
 }

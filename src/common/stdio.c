@@ -13,7 +13,9 @@ void putc(char c) {
 void puts(const char * str) {
     int i;
     for (i = 0; str[i] != '\0'; i ++)
+    {
         putc(str[i]);
+    }
 }
 
 void gets(char * buf, int buflen) {
@@ -26,9 +28,12 @@ void gets(char * buf, int buflen) {
     }
 
     putc('\n');
-    if (c == '\n') {
+    if (c == '\n') 
+    {
         buf[i] = '\0';
     }
     else
+    {
         buf[buflen-1] = '\0';
+    }
 }
