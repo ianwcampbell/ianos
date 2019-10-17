@@ -28,6 +28,12 @@ void shell_loop()
 	do {
 		puts("> ");
 		line = read_line();
+		if(line == NULL)
+		{
+			puts("BUFFER FAILED");
+			return;
+		}
+
 		puts(line);
 		putc('\n');
 		//args = lsh_split_line(line);
