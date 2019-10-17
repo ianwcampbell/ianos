@@ -29,11 +29,7 @@ void shell_loop()
 		puts("> ");
 		line = read_line();
 		puts(line);
-		if (line != '\n')
-		{
-			putc('\n');
-		}
-
+		putc('\n');
 		//args = lsh_split_line(line);
 		//status = lsh_execute(args);
 		kfree(line);

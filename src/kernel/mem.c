@@ -4,10 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/**
- * Heap Stuff
- */
 static void heap_init(uint32_t heap_start);
+
 /**
  * impliment kmalloc as a linked list of allocated segments.
  * Segments should be 4 byte aligned.
@@ -21,11 +19,6 @@ typedef struct heap_segment{
 } heap_segment_t;
 
 static heap_segment_t * heap_segment_list_head;
-
-/**
- * End Heap Stuff
- */
-
 
 extern uint8_t __end;
 static uint32_t num_pages;
@@ -54,19 +47,22 @@ void mem_init(atag_t * atags) {
     // Iterate over all pages and mark them with the appropriate flags
     // Start with kernel pages
     kernel_pages = ((uint32_t)&__end) / PAGE_SIZE;
-    for (i = 0; i < kernel_pages; i++) {
+    for (i = 0; i < kernel_pages; i++) 
+    {
         all_pages_array[i].vaddr_mapped = i * PAGE_SIZE;    // Identity map the kernel pages
         all_pages_array[i].flags.allocated = 1;
         all_pages_array[i].flags.kernel_page = 1;
     }
     // Reserve 1 MB for the kernel heap
-    for(; i < kernel_pages + (KERNEL_HEAP_SIZE / PAGE_SIZE); i++){
+    for(; i < kernel_pages + (KERNEL_HEAP_SIZE / PAGE_SIZE); i++)
+    {
         all_pages_array[i].vaddr_mapped = i * PAGE_SIZE;    // Identity map the kernel pages
         all_pages_array[i].flags.allocated = 1;
         all_pages_array[i].flags.kernel_heap_page = 1;
     }
     // Map the rest of the pages as unallocated, and add them to the free list
-    for(; i < num_pages; i++){
+    for(; i < num_pages; i++)
+    {
         all_pages_array[i].flags.allocated = 0;
         append_page_list(&free_pages, &all_pages_array[i]);
     }
