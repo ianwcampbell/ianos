@@ -15,13 +15,14 @@ CSRCFLAGS= -O2 -Wall -Wextra
 LFLAGS= -ffreestanding -O2 -nostdlib
 
 # Location of the files
+ARCH_SRC = ../src/kernel/arch/raspi2
 KER_SRC = ../src/kernel
 KER_HEAD = ../include
 COMMON_SRC = ../src/common
 OBJ_DIR = objects
 KERSOURCES = $(wildcard $(KER_SRC)/*.c)
 COMMONSOURCES = $(wildcard $(COMMON_SRC)/*.c)
-ASMSOURCES = $(wildcard $(KER_SRC)/*.S)
+ASMSOURCES = $(wildcard $(ARCH_SRC)/*.S)
 OBJECTS = $(patsubst $(KER_SRC)/%.c, $(OBJ_DIR)/%.o, $(KERSOURCES))
 OBJECTS += $(patsubst $(COMMON_SRC)/%.c, $(OBJ_DIR)/%.o, $(COMMONSOURCES))
 OBJECTS += $(patsubst $(KER_SRC)/%.S, $(OBJ_DIR)/%.o, $(ASMSOURCES))
@@ -31,7 +32,6 @@ IMG_NAME=kernel
 
 build-hardware: build
 	$(OBJCOPY) $(IMG_NAME).elf -O binary $(IMG_NAME).img
-
 
 build: $(OBJECTS) $(HEADERS)
 	echo $(OBJECTS)
