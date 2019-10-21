@@ -179,6 +179,48 @@ void kfree(void *ptr) {
         seg->next->next->prev = seg;
         seg->next = seg->next->next;
         seg->segment_size += seg->next->segment_size;
-	seg = seg->next;
+	    seg = seg->next;
+    }
+}
+
+void * memcpy(void * dst, const void * src, unsigned int cnt)
+{
+    char *pszDest = (char *)dst;
+    const char *pszSource = (const char*)src;
+
+    while (cnt)
+    {
+        *(pszDest++) = *(pszSource);
+        --cnt;
+    }
+    
+    return dst;
+}
+
+void * krealloc(void *ptr, size_t originalLength, size_t newLength)
+{
+    if (newLenght == 0)
+    {
+        kfree(ptr);
+        return NULL;
+    }
+    else if (!ptr)
+    {
+        return kmalloc(newLength);
+    }
+    else if (newLength <= originalLength)
+    {
+        return ptr;
+    }
+    else
+    {
+        assert((ptr) && (newLength > originalLength));
+        void * ptrNew = kmalloc(newLength);
+        if (ptrNew)
+        {
+            memcpy(ptrNew, ptr, originalLength);
+            kfree(ptr);
+        }
+        return ptrNew;
     }
 }
