@@ -1,4 +1,5 @@
 #include <common/stdlib.h>
+#include <stdint.h>
 
 __inline__ uint32_t div(uint32_t dividend, uint32_t divisor)
 {
@@ -53,7 +54,7 @@ void bzero(void * dest, int bytes) {
     }
 }
 
-char * itoa(int num, int i) {
+char * itoa(int num, int base) {
     static char intbuf[33];
     uint32_t j = 0, isneg = 0, i;
     

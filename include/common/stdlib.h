@@ -1,5 +1,6 @@
 #ifndef STDLIB_H
 #define STDLIB_H
+#include <stdint.h>
 
 typedef struct divmod_result {
     uint32_t div;
@@ -11,6 +12,6 @@ uint32_t div(uint32_t dividend, uint32_t divisor);
 
 void bzero(void * dest, int bytes);
 
-char * itoa(int i);
+char * itoa(int num, int i);
 
 #endif

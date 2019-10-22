@@ -39,32 +39,36 @@ void gets(char * buf, int buflen) {
     }
 }
 
-void printf(const char *fmt, ...)
+void printf(char *fmt, ...)
 {
+    char * traverse;
+
     va_list args;
     va_start(args, fmt);
     
-    for(; *fmt != '\0'; fmt++)
+    for(traverse = fmt; *traverse != '\0'; traverse++)
     {
-        if (*fmt == '%') 
+        while(*traverse != '%')
         {
-            switch (*(++fmt))
-            {
-                case '%':
-                    putc('%');
-                    break;
-                case 'd':
-                    puts(itoa(va_arg(args, int), 10));
-                    break;
-                case 'x':
-                    puts(itoa(va_arg(args, int), 16));
-                case 's':
-                    puts(va_arg(args, char *));
-                    break;
-            }
+            putc(*traverse);
+            traverse++;
         }
-        else puts(*fmt);
+    
+        switch (*traverse)
+        {
+            case 'c':
+                putc(va_arg(args, int));
+                break;
+            case 'd':
+                puts(itoa(va_arg(args, int), 10));
+                break;
+            case 'x':
+                puts(itoa(va_arg(args, unsigned int), 16));
+                break;
+            case 's':
+                puts(va_arg(args, char *));
+                break;
+        }
     }
-
-    va_ends(args);
+    va_end(args);
 } 

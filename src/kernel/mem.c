@@ -115,6 +115,7 @@ static void heap_init(uint32_t heap_start) {
 
 
 void * kmalloc(uint32_t bytes) {
+    //printf("Bytes requested...%d\n", bytes);
     heap_segment_t * curr, *best = NULL;
     int diff, best_diff = 0x7fffffff; // Max signed int
 
@@ -157,6 +158,7 @@ void * kmalloc(uint32_t bytes) {
 }
 
 void kfree(void *ptr) {
+    puts("Free called...\n");
     heap_segment_t * seg;
 
     if (!ptr)
@@ -243,11 +245,10 @@ void * krealloc(void *ptr, size_t newLength)
 
         if (ptrNew)
         {
-            puts("Cpying");
             memcpy(ptrNew, ptr, originalLength);
             kfree(ptr);
         }
         return ptrNew;
     }
-    return;
+    return NULL;
 }

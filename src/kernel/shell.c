@@ -15,7 +15,7 @@ char * read_line(void)
 	char * buffer = kmalloc(BUFSIZE * sizeof(char));
 	if(!buffer)
 	{
-		puts("Couldn't allocate buffer\n");
+        puts("Couldn't allocate resources...\n");
 		return NULL;
 	}
 	gets(buffer, BUFSIZE);
@@ -31,7 +31,7 @@ char ** split_line(char * line)
 
     if(!tokens)
     {
-        puts("Allocation Error\n");
+        puts("Couldn't allocate resources...\n");
         return NULL;
     }
 
@@ -44,13 +44,12 @@ char ** split_line(char * line)
         if (pos >= bufsize)
         {
             bufsize += TOK_BUFSIZE;
-            puts("Need to realloc");
             tokens = krealloc(tokens, bufsize * sizeof(char*));
-            //if (!tokens)
-            //{
+            if (!tokens)
+            {
             //    puts("REALLOC FAILED");
-            //    return NULL;
-            //}  
+                return NULL;
+            }  
         }
         token = strtok(NULL, DELIM);
     }
