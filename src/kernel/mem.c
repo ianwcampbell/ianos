@@ -1,6 +1,7 @@
 #include <kernel/mem.h>
 #include <kernel/atag.h>
 #include <common/stdlib.h>
+#include <common/stdio.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -28,8 +29,6 @@ IMPLEMENT_LIST(page);
 
 static page_t * all_pages_array;
 page_list_t free_pages;
-
-
 
 void mem_init(atag_t * atags) {
     uint32_t mem_size, page_array_len, kernel_pages, page_array_end, i;
@@ -124,9 +123,11 @@ void * kmalloc(uint32_t bytes) {
     bytes += bytes % 16 ? 16 - (bytes % 16) : 0;
 
     // Find the allocation that is closest in size to this request
-    for (curr = heap_segment_list_head; curr != NULL; curr = curr->next) {
+    for (curr = heap_segment_list_head; curr != NULL; curr = curr->next) 
+    {
         diff = curr->segment_size - bytes;
-        if (!curr->is_allocated && diff < best_diff && diff >= 0) {
+        if (!curr->is_allocated && diff < best_diff && diff >= 0)
+        {
             best = curr;
             best_diff = diff;
         }
@@ -139,7 +140,8 @@ void * kmalloc(uint32_t bytes) {
     // If the best difference we could come up with was large, split up this segment into two.
     // Since our segment headers are rather large, the criterion for splitting the segment is that
     // when split, the segment not being requested should be twice a header size
-    if (best_diff > (int)(2 * sizeof(heap_segment_t))) {
+    if (best_diff > (int)(2 * sizeof(heap_segment_t))) 
+    {
         bzero(((void*)(best)) + bytes, sizeof(heap_segment_t));
         curr = best->next;
         best->next = ((void*)(best)) + bytes;
@@ -197,30 +199,55 @@ void * memcpy(void * dst, const void * src, unsigned int cnt)
     return dst;
 }
 
-void * krealloc(void *ptr, size_t originalLength, size_t newLength)
+size_t _get_size(void *p)
 {
-    if (newLenght == 0)
+    size_t * in = p;
+    if(in)
     {
+        --in;
+        return *in;
+    }
+    
+    return -1;
+} 
+
+void * krealloc(void *ptr, size_t newLength)
+{
+    size_t originalLength = _get_size(ptr);
+    
+    if (newLength == 0)
+    {
+        puts("New length is 0");
         kfree(ptr);
         return NULL;
     }
-    else if (!ptr)
+    else if (!ptr) 
     {
+        puts("PTR was NULL");
         return kmalloc(newLength);
     }
     else if (newLength <= originalLength)
     {
+        puts("New length was less"); 
         return ptr;
     }
     else
     {
-        assert((ptr) && (newLength > originalLength));
+        if( !ptr || newLength < originalLength)
+        {
+            puts("ptr==null || new < orig");
+            return NULL;
+        }
+
         void * ptrNew = kmalloc(newLength);
+
         if (ptrNew)
         {
+            puts("Cpying");
             memcpy(ptrNew, ptr, originalLength);
             kfree(ptr);
         }
         return ptrNew;
     }
+    return;
 }

@@ -4,6 +4,7 @@
 #include <common/stdio.h>
 #include <common/stdlib.h>
 #include <kernel/shell.h>
+#include <common/string.h>
 
 #define BUFSIZE 1024
 #define TOK_BUFSIZE 64
@@ -25,33 +26,32 @@ char ** split_line(char * line)
 {
     int pos = 0;
     int bufsize = TOK_BUFSIZE;
-    char ** tokens = kmalloc(bufsize * sizeof(char));
+    char ** tokens = kmalloc(bufsize * sizeof(char*));
     char * token;
 
-    if(tokens == NULL)
+    if(!tokens)
     {
-        puts("COULD NOT MALLOC");
+        puts("Allocation Error\n");
         return NULL;
     }
 
-    //IMPLEMENT STRTOK TODO
     token = strtok(line, DELIM);
     while (token != NULL)
     {
         tokens[pos] = token;
-        pos ++;
+        pos++;
 
         if (pos >= bufsize)
         {
             bufsize += TOK_BUFSIZE;
+            puts("Need to realloc");
             tokens = krealloc(tokens, bufsize * sizeof(char*));
-            if (tokens == NULL)
-            {
-                puts("REALLOC FAILED");
-                return NULL;
-            }  
+            //if (!tokens)
+            //{
+            //    puts("REALLOC FAILED");
+            //    return NULL;
+            //}  
         }
-
         token = strtok(NULL, DELIM);
     }
     
@@ -76,11 +76,11 @@ void shell_loop()
 
 		puts(line);
 		putc('\n');
-		//args = split_line(line);
+		args = split_line(line);
 		//status = lsh_execute(args);
 		kfree(line);
 		bzero(line, BUFSIZE);
-		//kfree(args);
+		kfree(args);
 	} while (1);
 }
 

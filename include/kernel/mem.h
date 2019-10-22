@@ -28,7 +28,7 @@ void free_page(void * ptr);
 
 void * kmalloc(uint32_t bytes);
 void kfree(void *ptr);
-void * krealloc(void * ptr, size_t originalLength, size_t newLength);
+void * krealloc(void * ptr, size_t newLength);
 void * memcpy(void *dst, const void *src, unsigned int cnt);
 
 

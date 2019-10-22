@@ -1,12 +1,51 @@
 #include <common/stdlib.h>
 
-void memcpy(void * dest, void * src, int bytes) {
-    char * d = dest, * s = src;
-    while (bytes--) {
-        *d++ = *s++;
+__inline__ uint32_t div(uint32_t dividend, uint32_t divisor)
+{
+    uint32_t denom=divisor;
+    uint32_t current = 1;
+    uint32_t answer = 0;
+
+    if (denom > dividend)
+    {
+        return 0;
     }
+    
+    if (denom == dividend)
+    {
+        return 1;
+    }
+
+    while (denom <= dividend)
+    {
+        denom <<= 1;
+        current <<= 1;
+    }
+    
+    denom >>= 1;
+    current >>= 1;
+
+    while (current!=0) 
+    {
+        if (dividend >= denom)
+        {
+            dividend -= denom;
+            answer |= current;
+        }
+        current >>= 1;
+        denom >>= 1;
+    }
+    return answer;
 }
 
+__inline__ divmod_t divmod(uint32_t dividend, uint32_t divisor)
+{
+    divmod_t res;
+    res.div = div(dividend, divisor);
+    res.mod = dividend - res.div*divisor;
+
+    return res;
+}
 void bzero(void * dest, int bytes) {
     char * d = dest;
     while (bytes--) {
@@ -14,10 +53,10 @@ void bzero(void * dest, int bytes) {
     }
 }
 
-char * itoa(int i) {
-    static char intbuf[12];
-    int j = 0, isneg = 0;
-
+char * itoa(int num, int i) {
+    static char intbuf[33];
+    uint32_t j = 0, isneg = 0, i;
+    
     if (i == 0) {
         intbuf[0] = '0';
         intbuf[1] = '\0';
