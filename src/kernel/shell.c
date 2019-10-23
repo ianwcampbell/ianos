@@ -6,16 +6,17 @@
 #include <kernel/shell.h>
 #include <common/string.h>
 
-#define BUFSIZE 1024
-#define TOK_BUFSIZE 64
+#define BUFSIZE 256
+#define TOK_BUFSIZE 32
 #define DELIM " \t\r\n\a"
 
 char * read_line(void)
 {
 	char * buffer = kmalloc(BUFSIZE * sizeof(char));
+    puts("Malloced read line buffer\n");
 	if(!buffer)
 	{
-        puts("Couldn't allocate resources...\n");
+        puts("Couldn't allocate resources to read line buffer...\n");
 		return NULL;
 	}
 	gets(buffer, BUFSIZE);
@@ -31,9 +32,9 @@ char ** split_line(char * line)
 
     if(!tokens)
     {
-        puts("Couldn't allocate resources...\n");
-        return NULL;
+        puts("Couldn't allocate resources for tokens...\n");
     }
+    puts("Malloced tokens...\n");
 
     token = strtok(line, DELIM);
     while (token != NULL)
@@ -45,16 +46,17 @@ char ** split_line(char * line)
         {
             bufsize += TOK_BUFSIZE;
             tokens = krealloc(tokens, bufsize * sizeof(char*));
+            puts("Realloced tokens\n");
             if (!tokens)
             {
-            //    puts("REALLOC FAILED");
+                puts("REALLOC FAILED\n");
                 return NULL;
             }  
         }
         token = strtok(NULL, DELIM);
     }
-    
     tokens[pos] = NULL;
+    puts("returning tokens\n");
     return tokens;
 }
 

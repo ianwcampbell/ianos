@@ -65,8 +65,6 @@ void mem_init(atag_t * atags) {
         all_pages_array[i].flags.allocated = 0;
         append_page_list(&free_pages, &all_pages_array[i]);
     }
-
-
     // Initialize the heap
     page_array_end = (uint32_t)&__end + page_array_len;
     heap_init(page_array_end);
@@ -77,9 +75,10 @@ void * alloc_page(void) {
     page_t * page;
     void * page_mem;
 
-
     if (size_page_list(&free_pages) == 0)
+    {
         return 0;
+    }
 
     // Get a free page
     page = pop_page_list(&free_pages);
@@ -114,8 +113,9 @@ static void heap_init(uint32_t heap_start) {
 }
 
 
-void * kmalloc(uint32_t bytes) {
-    //printf("Bytes requested...%d\n", bytes);
+void * kmalloc(uint32_t bytes) 
+{
+    puts("Mallocing!\n");
     heap_segment_t * curr, *best = NULL;
     int diff, best_diff = 0x7fffffff; // Max signed int
 
@@ -134,9 +134,11 @@ void * kmalloc(uint32_t bytes) {
         }
     }
 
-    // There must be no free memory right now :(
     if (best == NULL)
+    {
+        puts("No free memory\n");
         return NULL;
+    }
 
     // If the best difference we could come up with was large, split up this segment into two.
     // Since our segment headers are rather large, the criterion for splitting the segment is that
@@ -215,6 +217,7 @@ size_t _get_size(void *p)
 
 void * krealloc(void *ptr, size_t newLength)
 {
+    puts("Reallocing\n");
     size_t originalLength = _get_size(ptr);
     
     if (newLength == 0)
@@ -226,7 +229,7 @@ void * krealloc(void *ptr, size_t newLength)
     else if (!ptr) 
     {
         puts("PTR was NULL");
-        return kmalloc(newLength);
+        return NULL;
     }
     else if (newLength <= originalLength)
     {
@@ -235,12 +238,7 @@ void * krealloc(void *ptr, size_t newLength)
     }
     else
     {
-        if( !ptr || newLength < originalLength)
-        {
-            puts("ptr==null || new < orig");
-            return NULL;
-        }
-
+        puts("Getting new pointer\n");
         void * ptrNew = kmalloc(newLength);
 
         if (ptrNew)
