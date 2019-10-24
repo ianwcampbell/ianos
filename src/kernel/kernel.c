@@ -24,5 +24,5 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
     puts("Welcome to IanOS!!\n");
     puts("Starting Kernel level shell...\n");
     start_shell();
-
+    return;
 }

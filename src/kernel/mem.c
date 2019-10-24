@@ -115,7 +115,6 @@ static void heap_init(uint32_t heap_start) {
 
 void * kmalloc(uint32_t bytes) 
 {
-    puts("Mallocing!\n");
     heap_segment_t * curr, *best = NULL;
     int diff, best_diff = 0x7fffffff; // Max signed int
 
@@ -160,7 +159,6 @@ void * kmalloc(uint32_t bytes)
 }
 
 void kfree(void *ptr) {
-    puts("Free called...\n");
     heap_segment_t * seg;
 
     if (!ptr)

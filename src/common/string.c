@@ -2,6 +2,40 @@
 #include <stdio.h>
 #include <string.h>
 
+int32_t get_spaces(char * str)
+{
+    int i = 0;
+    char *p = str;
+    while( *p != '\0' )
+    {
+        if( *(p-1) == ' ' && *(p+1) != '\0')
+        {
+            i++;
+        }
+        p++;
+    }
+    return i;
+} 
+
+int strcmp(const char * src1, const char * src2)
+{
+    while((*src1 != '\0') || (*src2 != '\0'))
+    {
+        if(*src1 > *src2)
+        {
+            return 1;
+        }
+        if(*src1 < *src2)
+        {
+            return 1;
+        }
+        
+        src1++;
+        src2++;
+    }
+    return 0;
+}
+
 char * strtok(char * str, const char* delim)
 {
     static char* buffer;

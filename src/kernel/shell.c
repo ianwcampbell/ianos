@@ -10,10 +10,27 @@
 #define TOK_BUFSIZE 32
 #define DELIM " \t\r\n\a"
 
+int execute(char ** args)
+{
+    puts(args[0]);
+    puts(args[1]);
+    putc('\n');
+    if(strcmp(args[0], "exit") == 0)
+    {
+        puts("Did exit");
+        return 1;
+    }
+    else
+    {
+        puts(args[0]);
+    }
+
+    return 0;
+}
+
 char * read_line(void)
 {
 	char * buffer = kmalloc(BUFSIZE * sizeof(char));
-    puts("Malloced read line buffer\n");
 	if(!buffer)
 	{
         puts("Couldn't allocate resources to read line buffer...\n");
@@ -25,38 +42,20 @@ char * read_line(void)
 
 char ** split_line(char * line)
 {
+    int num_tokens = get_spaces(line) + 1;
     int pos = 0;
-    int bufsize = TOK_BUFSIZE;
-    char ** tokens = kmalloc(bufsize * sizeof(char*));
+    char ** tokens = kmalloc((num_tokens + 1) * sizeof(char*));
     char * token;
 
-    if(!tokens)
-    {
-        puts("Couldn't allocate resources for tokens...\n");
-    }
-    puts("Malloced tokens...\n");
-
     token = strtok(line, DELIM);
-    while (token != NULL)
+    while (pos < num_tokens)
     {
         tokens[pos] = token;
-        pos++;
-
-        if (pos >= bufsize)
-        {
-            bufsize += TOK_BUFSIZE;
-            tokens = krealloc(tokens, bufsize * sizeof(char*));
-            puts("Realloced tokens\n");
-            if (!tokens)
-            {
-                puts("REALLOC FAILED\n");
-                return NULL;
-            }  
-        }
+        puts(token);
         token = strtok(NULL, DELIM);
+        pos++;        
     }
     tokens[pos] = NULL;
-    puts("returning tokens\n");
     return tokens;
 }
 
@@ -74,15 +73,19 @@ void shell_loop()
 			puts("BUFFER FAILED");
 			return;
 		}
-
-		puts(line);
-		putc('\n');
 		args = split_line(line);
-		//status = lsh_execute(args);
 		kfree(line);
 		bzero(line, BUFSIZE);
-		kfree(args);
+		status = execute(args);
+        if(status == 1)
+        {
+            puts("Shutting down...");
+            break;
+        }
+
 	} while (1);
+
+    return;
 }
 
 void start_shell()

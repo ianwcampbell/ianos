@@ -68,6 +68,8 @@ void printf(char *fmt, ...)
             case 's':
                 puts(va_arg(args, char *));
                 break;
+            default:
+                break;
         }
     }
     va_end(args);
