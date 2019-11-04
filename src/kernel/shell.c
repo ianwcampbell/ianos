@@ -10,19 +10,12 @@
 #define TOK_BUFSIZE 32
 #define DELIM " \t\r\n\a"
 
-int execute(char ** args)
+int execute(char ** args, int num_args)
 {
-    puts(args[0]);
-    puts(args[1]);
-    putc('\n');
-    if(strcmp(args[0], "exit") == 0)
+    for(int i = 0; i < num_args; i++)
     {
-        puts("Did exit");
-        return 1;
-    }
-    else
-    {
-        puts(args[0]);
+        puts(args[i]);
+        putc('\n');
     }
 
     return 0;
@@ -40,9 +33,8 @@ char * read_line(void)
 	return buffer;
 }
 
-char ** split_line(char * line)
+char ** split_line(char * line, int num_tokens)
 {
-    int num_tokens = get_spaces(line) + 1;
     int pos = 0;
     char ** tokens = kmalloc((num_tokens + 1) * sizeof(char*));
     char * token;
@@ -51,7 +43,6 @@ char ** split_line(char * line)
     while (pos < num_tokens)
     {
         tokens[pos] = token;
-        puts(token);
         token = strtok(NULL, DELIM);
         pos++;        
     }
@@ -64,6 +55,7 @@ void shell_loop()
 	char * line;
 	char ** args;
 	int status = 0;
+    int num_tokens;
 
 	do {
 		puts("> ");
@@ -73,10 +65,18 @@ void shell_loop()
 			puts("BUFFER FAILED");
 			return;
 		}
-		args = split_line(line);
+        else if(strcmp(line, "\0") == 0)
+        {
+            kfree(line);
+            bzero(line, BUFSIZE);
+            continue;
+        }
+        num_tokens = get_spaces(line) + 1;
+		args = split_line(line, num_tokens);
+		status = execute(args, num_tokens);
 		kfree(line);
 		bzero(line, BUFSIZE);
-		status = execute(args);
+
         if(status == 1)
         {
             puts("Shutting down...");
