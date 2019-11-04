@@ -4,22 +4,12 @@
 #include <common/stdio.h>
 #include <common/stdlib.h>
 #include <kernel/shell.h>
+#include <kernel/bin.h>
 #include <common/string.h>
 
 #define BUFSIZE 256
 #define TOK_BUFSIZE 32
 #define DELIM " \t\r\n\a"
-
-int execute(char ** args, int num_args)
-{
-    for(int i = 0; i < num_args; i++)
-    {
-        puts(args[i]);
-        putc('\n');
-    }
-
-    return 0;
-}
 
 char * read_line(void)
 {
@@ -82,7 +72,6 @@ void shell_loop()
             puts("Shutting down...");
             break;
         }
-
 	} while (1);
 
     return;
