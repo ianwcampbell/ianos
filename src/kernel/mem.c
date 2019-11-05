@@ -37,7 +37,8 @@ void mem_init(atag_t * atags) {
     mem_size = get_mem_size(atags);
     num_pages = mem_size / PAGE_SIZE;
 
-    // Allocate space for all those pages' metadata.  Start this block just after the kernel image is finished
+    // Allocate space for all those pages' metadata.  
+    // Start this block just after the kernel image is finished
     page_array_len = sizeof(page_t) * num_pages;
     all_pages_array = (page_t *)&__end;
     bzero(all_pages_array, page_array_len);
