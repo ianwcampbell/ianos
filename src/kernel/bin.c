@@ -17,9 +17,9 @@ int32_t get_binary(char * binary)
     
     list_for_each_entry(tmp, &binary_list, list)
     {
-        if(internal_counter > added_binaries -1)
+        if(internal_counter > added_binaries - 1)
         {
-            puts("Type 'help' for the available options...\n");
+            puts("Hey that is not a valid command...type 'help' for the available options...\n");
             break;
         } 
         if(strcmp(tmp->name, binary) == 0)
@@ -75,8 +75,28 @@ int32_t help()
 
 int32_t shutdown()
 {
+    int32_t ret = -1;
+    return ret;
+}
+    
+int32_t mem_info()
+{
     int32_t ret = 0;
-    puts("Here is the shutdown menu\n");
+    puts("Memory information binary\n");
+    return ret;
+}
+
+int32_t version()
+{
+    int32_t ret = 0;
+    puts("ianos 1.0\n");
+    puts(
+".___   _____    _______   ________    _________ \n"                                                
+"|   | /  _  \   \      \  \_____  \  /   _____/ \n"
+"|   |/  /_\  \  /   |   \  /   |   \ \_____  \  \n"
+"|   /    |    \/    |    \/    |    \/        \ \n"
+"|___\____|__  /\____|__  /\_______  /_______  / \n"
+"            \/         \/         \/        \/  \n");
     return ret;
 }
 
@@ -84,6 +104,8 @@ void setup_binaries()
 {
     add_binary("help", help);
     add_binary("shutdown", shutdown);
+    add_binary("mem_info", mem_info);
+    add_binary("version_print", version);
     return;
 } 
 

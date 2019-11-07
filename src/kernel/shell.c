@@ -67,7 +67,7 @@ void shell_loop()
 		kfree(line);
 		bzero(line, BUFSIZE);
 
-        if(status == 1)
+        if(status == -1)
         {
             puts("Shutting down...");
             break;
