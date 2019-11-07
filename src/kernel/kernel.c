@@ -22,7 +22,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
     mem_init((atag_t *)atags);
     puts("Complete...\n");
     puts("Initializing Binary Module\n");
-    setup_init();
+    setup_binaries();
     puts("Complete...\n");
 
     puts("Welcome to IanOS!!\n");
