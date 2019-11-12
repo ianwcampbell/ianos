@@ -28,7 +28,7 @@ OBJECTS += $(patsubst $(COMMON_SRC)/%.c, $(OBJ_DIR)/%.o, $(COMMONSOURCES))
 OBJECTS += $(patsubst $(KER_SRC)/%.S, $(OBJ_DIR)/%.o, $(ASMSOURCES))
 HEADERS = $(wildcard $(KER_HEAD)/*.h)
 
-IMG_NAME=kernel
+IMG_NAME=kernel7
 
 build-hardware: build
 	$(OBJCOPY) $(IMG_NAME).elf -O binary $(IMG_NAME).img
