@@ -50,27 +50,17 @@ void delay(int32_t count);
 enum
 {
     // The GPIO registers base address.
-#ifdef MODEL_1
-    GPIO_BASE = 0x20200000, 
-#else
-    GPIO_BASE = 0x3F200000, 
-#endif
+    GPIO_BASE = 0xFE200000;
 
-
-    // The offsets for reach register.
-
+    // The offsets for each register.
     // Controls actuation of pull up/down to ALL GPIO pins.
     GPPUD = (GPIO_BASE + 0x94),
 
     // Controls actuation of pull up/down for specific GPIO pin.
     GPPUDCLK0 = (GPIO_BASE + 0x98),
 
-    // The base address for UART.
-#ifdef MODEL_1
-    UART0_BASE = 0x20201000, 
-#else
-    UART0_BASE = 0x3F201000, 
-#endif
+    // The base address for UART raspi 4
+    UART0_BASE = 0xFE201000, 
 
     // The offsets for reach register for the UART.
     UART0_DR     = (UART0_BASE + 0x00),
