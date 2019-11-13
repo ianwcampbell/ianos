@@ -40,17 +40,17 @@ typedef union uart_control {
     uint32_t as_int;
 } uart_control_t;
 
-void mmio_write(uint32_t reg, uint32_t data);
+void mmio_write(uint64_t reg, uint64_t data);
 
-uint32_t mmio_read(uint32_t reg);
+uint32_t mmio_read(uint64_t reg);
 
 // Loop <delay> times in a way that the compiler won't optimize away
 void delay(int32_t count);
 
 enum
 {
-    // The GPIO registers base address.
-    GPIO_BASE = 0xFE200000,
+    // The GPIO registers base address. For raspi 3
+    GPIO_BASE = 0x3F200000,
 
     // The offsets for each register.
     // Controls actuation of pull up/down to ALL GPIO pins.
@@ -60,7 +60,7 @@ enum
     GPPUDCLK0 = (GPIO_BASE + 0x98),
 
     // The base address for UART raspi 4
-    UART0_BASE = 0xFE201000, 
+    UART0_BASE = 0x3F201000, 
 
     // The offsets for reach register for the UART.
     UART0_DR     = (UART0_BASE + 0x00),

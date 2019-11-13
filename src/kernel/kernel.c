@@ -8,7 +8,7 @@
 #include <kernel/shell.h>
 #include <kernel/bin.h>
 
-void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
+void kernel_main(uint32_t r0, uint32_t r1, uint64_t atags)
 {
     // Declare as unused
     (void) r0;
