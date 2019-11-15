@@ -1,4 +1,4 @@
-# Don't use normal gcc, use the arm cross compilj
+# Don't use normal gcc, use the arm cross compiler
 CC = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/bin/aarch64-elf-gcc
 OBJCOPY = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/aarch64-elf/bin/objcopy
 

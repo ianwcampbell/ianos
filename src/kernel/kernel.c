@@ -15,8 +15,8 @@ void kernel_main(uint32_t r0, uint32_t r1, uint64_t atags)
     (void) r1;
     (void) atags;
 
-    puts("Initializing Serial I/O Module\n");
     uart_init();
+    puts("Initializing Serial I/O Module\n");
     puts("Complete...\n");
     puts("Initializing Memory Module\n");
     mem_init((atag_t *)atags);
