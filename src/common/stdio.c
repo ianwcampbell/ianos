@@ -8,37 +8,42 @@ char getc(void) {
 }
 
 void putc(char c) {
-    uart_putc(c);
+    uart_puts(&c);
+    return;
 }
 
-void puts(const char * str) {
-    int i;
-    for (i = 0; str[i] != '\0'; i ++)
-    {
-        putc(str[i]);
-    }
+void puts(char * str) {
+    //int i;
+    //for (i = 0; str[i] != '\0'; i ++)
+    //{
+        //putc(str[i]);
+    //}
+    uart_puts(str);
+    return;
 }
 
 void gets(char * buf, int buflen) {
     int i;
-    char c;
-    // Leave a spot for null char in buffer
-    for (i = 0; (c = getc()) != '\r' && buflen > 1; i++, buflen--) {
-        putc(c);
-        buf[i] = c;
-    }
-
-    putc('\n');
-    if (c == '\n') 
+    char c[2];
+    // necessary to not have padded strings print out
+    c[1] = '\0';
+    
+    for(i = 0; i<buflen; i++)
     {
-        buf[i] = '\0';
+        c[0] = uart_getc();
+        if(c[0] == '\n')
+        {
+            puts("\n");
+            buf[i] = '\0';
+            break;
+        }
+        puts(c);
+        buf[i] = c[0];
     }
-    else
-    {
-        buf[buflen-1] = '\0';
-    }
+    return;
 }
 
+// BROKEN DON'T USE!
 void printf(char *fmt, ...)
 {
     char * traverse;

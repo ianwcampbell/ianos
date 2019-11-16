@@ -1,99 +1,89 @@
-#include <stddef.h>
-#include <stdint.h>
-#include <kernel/uart.h>
-#include <common/stdlib.h>
+#include "kernel/gpio.h"
+#include "kernel/mbox.h"
 
-// Memory-Mapped I/O output
-void mmio_write(uint64_t reg, uint64_t data)
-{
-    *(volatile uint64_t*)reg = data;
-}
-
-// Memory-Mapped I/O input
-uint32_t mmio_read(uint64_t reg)
-{
-    return *(volatile uint64_t*)reg;
-}
-
-// Loop <delay> times in a way that the compiler won't optimize away
-void delay(int32_t count)
-{
-    asm volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=\n"
-            : "=r"(count): [count]"0"(count) : "cc");
-}
+#define UART0_DR        ((volatile unsigned int*)(MMIO_BASE+0x00201000))
+#define UART0_FR        ((volatile unsigned int*)(MMIO_BASE+0x00201018))
+#define UART0_IBRD      ((volatile unsigned int*)(MMIO_BASE+0x00201024))
+#define UART0_FBRD      ((volatile unsigned int*)(MMIO_BASE+0x00201028))
+#define UART0_LCRH      ((volatile unsigned int*)(MMIO_BASE+0x0020102C))
+#define UART0_CR        ((volatile unsigned int*)(MMIO_BASE+0x00201030))
+#define UART0_IMSC      ((volatile unsigned int*)(MMIO_BASE+0x00201038))
+#define UART0_ICR       ((volatile unsigned int*)(MMIO_BASE+0x00201044))
 
 void uart_init()
 {
-    uart_control_t control;
-    // Disable UART0.
-    bzero(&control, 4);
-    mmio_write(UART0_CR, control.as_int);
+    register unsigned int r;
 
-    // Setup the GPIO pin 14 && 15.
-    // Disable pull up/down for all GPIO pins & delay for 150 cycles.
-    mmio_write(GPPUD, 0x00000000);
-    delay(150);
+    *UART0_CR = 0;
 
-    // Disable pull up/down for pin 14,15 & delay for 150 cycles.
-    mmio_write(GPPUDCLK0, (1 << 14) | (1 << 15));
-    delay(150);
+    mbox[0] = 9*4;
+    mbox[1] = MBOX_REQUEST;
+    mbox[2] = MBOX_TAG_SETCLKRATE;
+    mbox[3] = 12;
+    mbox[4] = 8;
+    mbox[5] = 2;
+    mbox[6] = 4000000;
+    mbox[7] = 0;
+    mbox[8] = MBOX_TAG_LAST;
+    mbox_call(MBOX_CH_PROP);
 
-    // Write 0 to GPPUDCLK0 to make it take effect.
-    mmio_write(GPPUDCLK0, 0x00000000);
+    /* Mapping UART0 to GPIO pins */
+    r = *GPFSEL1;
+    r &=~((7<<12)|(7<<15)); //gpio 14 and 15
+    r |= (4<<12)|(4<<15);
+    *GPFSEL1 = r;
+    *GPPUD = 0;
+    r=150; while(r--) {asm volatile("nop"); }
+    *GPPUDCLK0 = (1<<14)|(1<<15);
+    r=150; while(r--) {asm volatile("nop"); }
+    *GPPUDCLK0 = 0;
 
-    // Clear pending interrupts.
-    mmio_write(UART0_ICR, 0x7FF);
-
-    // Set integer & fractional part of baud rate.
-    // Divider = UART_CLOCK/(16 * Baud)
-    // Fraction part register = (Fractional part * 64) + 0.5
-    // UART_CLOCK = 3000000; Baud = 115200.
-
-    // Divider = 3000000 / (16 * 115200) = 1.627 = ~1.
-    mmio_write(UART0_IBRD, 1);
-    // Fractional part register = (.627 * 64) + 0.5 = 40.6 = ~40.
-    mmio_write(UART0_FBRD, 40);
-
-    // Enable FIFO & 8 bit data transmissio (1 stop bit, no parity).
-    mmio_write(UART0_LCRH, (1 << 4) | (1 << 5) | (1 << 6));
-
-    // Mask all interrupts.
-    mmio_write(UART0_IMSC, (1 << 1) | (1 << 4) | (1 << 5) | (1 << 6) |
-            (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10));
-
-    // Enable UART0, receive & transfer part of UART.
-    control.uart_enabled = 1;
-    control.transmit_enabled = 1;
-    control.receive_enabled = 1;
-    mmio_write(UART0_CR, control.as_int);
+    *UART0_ICR = 0x7FF;
+    *UART0_IBRD = 2;
+    *UART0_FBRD = 0xB;
+    *UART0_LCRH = 0b11<<5;
+    *UART0_CR = 0x301;
 }
 
-
-uart_flags_t read_flags(void) {
-    uart_flags_t flags;
-    flags.as_int = mmio_read(UART0_FR);
-    return flags;
-}
-
-void uart_putc(unsigned char c)
+void uart_send(unsigned int c)
 {
-    uart_flags_t flags;
-    // Wait for UART to become ready to transmit.
-
-    do {
-        flags = read_flags();
-    }
-    while ( flags.transmit_queue_full );
-    mmio_write(UART0_DR, c);
+    do{asm volatile("nop");}while(*UART0_FR & 0x20);
+    *UART0_DR = c;
 }
 
-unsigned char uart_getc()
+char uart_getc()
 {
-    // Wait for UART to have received something.
-    uart_flags_t flags;
-    do {
-        flags = read_flags();
-    }
-    while ( flags.recieve_queue_empty );
-    return mmio_read(UART0_DR);
+    char r; 
+    do{asm volatile("nop");}while(*UART0_FR & 0x10);
+    r = (char)(*UART0_DR);
+    
+    return r=='\r'?'\n':r;
 }
+
+void uart_puts(char *s)
+{
+    while(*s)
+    {
+        if(*s == '\n')
+        {
+            uart_send('\r');
+        }
+        uart_send(*s++);
+    }
+}
+
+void uart_hex(unsigned int d)
+{
+    unsigned int n;
+    int c;
+    
+    for(c = 28; c >=0; c -= 4)
+    {
+        n = (d>>c)&0xF;
+        n += n>9?0x37:0x30;
+        uart_send(n);
+    }
+}
+    
+
+

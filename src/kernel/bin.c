@@ -67,7 +67,7 @@ int32_t help()
         }
         puts("\t");
         puts(tmp->name);
-        putc('\n');
+        puts("\n");
         internal_counter++;
     }
     return ret;
