@@ -1,5 +1,6 @@
 #include "kernel/gpio.h"
 #include "kernel/mbox.h"
+#include "kernel/uart.h"
 
 #define UART0_DR        ((volatile unsigned int*)(MMIO_BASE+0x00201000))
 #define UART0_FR        ((volatile unsigned int*)(MMIO_BASE+0x00201018))

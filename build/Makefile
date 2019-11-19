@@ -7,10 +7,10 @@ OBJCOPY = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/aarch64-elf/bin/objcopy
 CPU = cortex-a72
 CFLAGS= -mcpu=$(CPU) -fpic -ffreestanding $(DIRECTIVES)
 CSRCFLAGS= -O2 -Wall -Wextra
-LFLAGS= -ffreestanding -O2 -nostdlib
+LFLAGS= -ffreestanding -O2 -nostdlib -lgcc
 
 # Location of the files
-ARCH_SRC = ../src/kernel/arch/raspi2
+ARCH_SRC = ../src/kernel/arch/raspi3
 KER_SRC = ../src/kernel
 KER_HEAD = ../include
 COMMON_SRC = ../src/common
