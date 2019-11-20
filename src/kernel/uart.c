@@ -17,15 +17,14 @@ void uart_init()
 
     *UART0_CR = 0;
 
-    mbox[0] = 9*4;
+    mbox[0] = 8*4;
     mbox[1] = MBOX_REQUEST;
     mbox[2] = MBOX_TAG_SETCLKRATE;
-    mbox[3] = 12;
+    mbox[3] = 8;
     mbox[4] = 8;
     mbox[5] = 2;
     mbox[6] = 4000000;
-    mbox[7] = 0;
-    mbox[8] = MBOX_TAG_LAST;
+    mbox[7] = MBOX_TAG_LAST;
     mbox_call(MBOX_CH_PROP);
 
     /* Mapping UART0 to GPIO pins */
