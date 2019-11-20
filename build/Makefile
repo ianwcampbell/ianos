@@ -4,7 +4,7 @@ OBJCOPY = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/aarch64-elf/bin/objcopy
 
 # Set any constants based on the raspberry pi model.  Version 1 has some differences to 2 and 3
 
-CPU = cortex-a72
+CPU = cortex-a53
 CFLAGS= -mcpu=$(CPU) -fpic -ffreestanding $(DIRECTIVES)
 CSRCFLAGS= -O2 -Wall -Wextra
 LFLAGS= -ffreestanding -O2 -nostdlib -lgcc
