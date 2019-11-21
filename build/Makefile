@@ -25,6 +25,7 @@ HEADERS = $(wildcard $(KER_HEAD)/*.h)
 
 IMG_NAME=kernel8
 
+
 build-hardware: build
 	$(OBJCOPY) $(IMG_NAME).elf -O binary $(IMG_NAME).img
 
