@@ -1,21 +1,16 @@
-# Don't use normal gcc, use the arm cross compilj
-CC = ../../gcc-arm-none-eabi-8-2019-q3-update/bin/arm-none-eabi-gcc
-OBJCOPY = ../../gcc-arm-none-eabi-8-2019-q3-update/bin/arm-none-eabi-objcopy
+# Don't use normal gcc, use the arm cross compiler
+CC = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/bin/aarch64-elf-gcc
+OBJCOPY = ../../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/aarch64-elf/bin/objcopy
 
 # Set any constants based on the raspberry pi model.  Version 1 has some differences to 2 and 3
-ifeq ($(RASPI_MODEL),1)
-	CPU = arm1176jzf-s
-	DIRECTIVES = -D MODEL_1
-else
-	CPU = cortex-a7
-endif
 
+CPU = cortex-a53
 CFLAGS= -mcpu=$(CPU) -fpic -ffreestanding $(DIRECTIVES)
 CSRCFLAGS= -O2 -Wall -Wextra
-LFLAGS= -ffreestanding -O2 -nostdlib
+LFLAGS= -ffreestanding -O2 -nostdlib -lgcc
 
 # Location of the files
-ARCH_SRC = ../src/kernel/arch/raspi2
+ARCH_SRC = ../src/kernel/arch/raspi3
 KER_SRC = ../src/kernel
 KER_HEAD = ../include
 COMMON_SRC = ../src/common
@@ -28,7 +23,8 @@ OBJECTS += $(patsubst $(COMMON_SRC)/%.c, $(OBJ_DIR)/%.o, $(COMMONSOURCES))
 OBJECTS += $(patsubst $(KER_SRC)/%.S, $(OBJ_DIR)/%.o, $(ASMSOURCES))
 HEADERS = $(wildcard $(KER_HEAD)/*.h)
 
-IMG_NAME=kernel7
+IMG_NAME=kernel8
+
 
 build-hardware: build
 	$(OBJCOPY) $(IMG_NAME).elf -O binary $(IMG_NAME).img
@@ -54,5 +50,5 @@ clean:
 	rm $(IMG_NAME).elf
 	rm $(IMG_NAME).img
 
-run: build
-	qemu-system-arm -m 1024 -M raspi2 -serial stdio -kernel kernel.elf
+#run: build
+#	qemu-system-arm -m 1024 -M raspi2 -serial stdio -kernel kernel.elf

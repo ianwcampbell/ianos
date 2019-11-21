@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-static void heap_init(uint32_t heap_start);
+static void heap_init(uint64_t heap_start);
 
 /**
  * impliment kmalloc as a linked list of allocated segments.
@@ -46,7 +46,7 @@ void mem_init(atag_t * atags) {
 
     // Iterate over all pages and mark them with the appropriate flags
     // Start with kernel pages
-    kernel_pages = ((uint32_t)&__end) / PAGE_SIZE;
+    kernel_pages = ((uint64_t)&__end) / PAGE_SIZE;
     for (i = 0; i < kernel_pages; i++) 
     {
         all_pages_array[i].vaddr_mapped = i * PAGE_SIZE;    // Identity map the kernel pages
@@ -67,7 +67,7 @@ void mem_init(atag_t * atags) {
         append_page_list(&free_pages, &all_pages_array[i]);
     }
     // Initialize the heap
-    page_array_end = (uint32_t)&__end + page_array_len;
+    page_array_end = (uint64_t)&__end + page_array_len;
     heap_init(page_array_end);
 
 }
@@ -99,7 +99,7 @@ void free_page(void * ptr) {
     page_t * page;
 
     // Get page metadata from the physical address
-    page = all_pages_array + ((uint32_t)ptr / PAGE_SIZE);
+    page = all_pages_array + ((uint64_t)ptr / PAGE_SIZE);
 
     // Mark the page as free
     page->flags.allocated = 0;
@@ -107,7 +107,7 @@ void free_page(void * ptr) {
 }
 
 
-static void heap_init(uint32_t heap_start) {
+static void heap_init(uint64_t heap_start) {
    heap_segment_list_head = (heap_segment_t *) heap_start;
    bzero(heap_segment_list_head, sizeof(heap_segment_t));
    heap_segment_list_head->segment_size = KERNEL_HEAP_SIZE;
