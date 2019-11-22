@@ -1,13 +1,15 @@
 #include "uart.h"
 #include "mbox.h"
 #include "power.h"
+#include "stdio.h"
 
 void main()
 {
     char c; 
+
     // set up serial console
     uart_init();
-    uart_puts("Uart has been initialized...\n");
+    puts("Uart has been initialized...\n");
     
     // get the board's unique serial number with a mailbox call
     mbox[0] = 8*4;                  // length of the message
@@ -21,29 +23,29 @@ void main()
 
     // send the message to the GPU and receive answer
     if (mbox_call(MBOX_CH_PROP)) {
-        uart_puts("My serial number is: ");
+        puts("My serial number is: ");
         uart_hex(mbox[6]);
         uart_hex(mbox[5]);
-        uart_puts("\n");
+        puts("\n");
     } else {
-        uart_puts("Unable to query serial!\n");
+        puts("Unable to query serial!\n");
     }
 
     // echo everything back
     while(1) {
-        uart_puts(" 1 = power_off\n 2 - reset\n Choose one: ");
-        c = uart_getc();
+        puts(" 1 = power_off\n 2 - reset\n Choose one: ");
+        c = getc();
         uart_send(c);
-        uart_puts("\n\n");
+        puts("\n\n");
         
         if(c == '1')
         {
-            uart_puts("Goodbye!\n");
+            puts("Goodbye!\n");
             power_off();
         }
         if(c == '2')
         {
-            uart_puts("CYA soon\n");
+            puts("CYA soon\n");
             reset();
         }
     }
