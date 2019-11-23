@@ -20,7 +20,7 @@ void gets(char * buf, int buflen) {
     // necessary to not have padded strings print out
     c[1] = '\0';
     
-    for(i = 0; i<buflen; i++)
+    for(i = 0; i < buflen; i++)
     {
         c[0] = uart_getc();
         if(c[0] == '\n')

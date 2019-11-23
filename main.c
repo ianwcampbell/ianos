@@ -2,10 +2,11 @@
 #include "mbox.h"
 #include "power.h"
 #include "stdio.h"
+#include "shell.h"
 
 void main()
 {
-    char c; 
+    char c[2];
 
     // set up serial console
     uart_init();
@@ -22,28 +23,34 @@ void main()
     mbox[7] = MBOX_TAG_LAST;
 
     // send the message to the GPU and receive answer
-    if (mbox_call(MBOX_CH_PROP)) {
+    if (mbox_call(MBOX_CH_PROP))
+    {
         puts("My serial number is: ");
         uart_hex(mbox[6]);
         uart_hex(mbox[5]);
         puts("\n");
-    } else {
+    } 
+    else 
+    {
         puts("Unable to query serial!\n");
     }
 
     // echo everything back
-    while(1) {
+    while(1) 
+    {
         puts(" 1 = power_off\n 2 - reset\n Choose one: ");
-        c = getc();
-        uart_send(c);
+        c[0] = getc();
+        c[1] = '\0';
+        //uart_send(c);
+        puts(c);
         puts("\n\n");
         
-        if(c == '1')
+        if(c[0] == '1')
         {
             puts("Goodbye!\n");
             power_off();
         }
-        if(c == '2')
+        if(c[0] == '2')
         {
             puts("CYA soon\n");
             reset();

@@ -1,4 +1,3 @@
-
 SRCS = $(wildcard *.c)
 CROSSPATH=../gcc-arm-8.3-2019.03-x86_64-aarch64-elf/bin/aarch64-elf-
 CC=$(CROSSPATH)gcc

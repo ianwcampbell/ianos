@@ -1,1 +1,1 @@
-This is IanOS! A raspberry pi operating system made by following a couple guides found online!
+This is IanOS! A bare metal raspberry pi "OS" for the RPi3! This repo was made possible by the amazing guide by bztsrc. (https://github.com/bztsrc/raspi3-tutorial) The uart, gpio, delay, power, mailbox were taken from the guide and given slight personal modifications to suit my project. Thanks to bztsrc's guide I was able to learn a ton about working directly with hardware and creating a working system. 
