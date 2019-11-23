@@ -1,9 +1,7 @@
-#include <kernel/bin.h>
-#include <kernel/mem.h>
-#include <kernel/list2.h>
-#include <common/string.h>
-#include <common/stdio.h>
-#include <common/stdlib.h>
+#include "bin.h"
+#include "list.h"
+#include "string.h"
+#include "stdio.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -96,7 +94,7 @@ int32_t version()
         "   | |   / /\\ \\ | . ` | |  | |\\___ \\  \n" 
         "  _| |_ / ____ \\| |\\  | |__| |____) | \n"
         " |_____/_/    \\_\\_| \\_|\\____/|_____/  \n\n");
-    puts("ianos 1.0\n");
+    puts("ianos 0.2\n");
     return ret;
 }
 

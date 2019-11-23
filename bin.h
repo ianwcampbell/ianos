@@ -1,10 +1,8 @@
 #ifndef _BIN_H_
 #define _BIN_H_
 
-#include <kernel/bin.h>
-#include <kernel/list2.h>
+#include "list.h"
 #include <stdint.h>
-
 
 typedef int32_t (*function_pointer_t)();
 

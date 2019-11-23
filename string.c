@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "stdio.h"
 
 int32_t get_spaces(char * str)
 {
