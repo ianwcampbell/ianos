@@ -1,6 +1,6 @@
 #include "stdio.h"
 
-int32_t get_spaces(char * str)
+int get_spaces(char * str)
 {
     int i = 0;
     char *p = str;

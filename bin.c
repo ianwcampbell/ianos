@@ -3,15 +3,14 @@
 #include "string.h"
 #include "stdio.h"
 #include <stddef.h>
-#include <stdint.h>
 
 struct list_head binary_list;
-int32_t added_binaries = 0;
+int added_binaries = 0;
 
-int32_t get_binary(char * binary)
+int get_binary(char * binary)
 {
     struct binary * tmp;
-    int32_t internal_counter = 0;
+    int internal_counter = 0;
     
     list_for_each_entry(tmp, &binary_list, list)
     {
@@ -31,7 +30,7 @@ int32_t get_binary(char * binary)
 
 int execute(char ** args, int num_args)
 {
-    int32_t ret = 0;
+    int ret = 0;
     for(int i = 0; i < num_args; i++)
     {
         ret = get_binary(args[i]); 
@@ -50,11 +49,11 @@ void add_binary(char * name, function_pointer_t callback)
     return;
 }
 
-int32_t help()
+int help()
 {
     struct binary * tmp;
-    int32_t ret = 0;
-    int32_t internal_counter = 0;
+    int ret = 0;
+    int internal_counter = 0;
 
     puts("Here is the help menu\n");
     list_for_each_entry(tmp, &binary_list, list)
@@ -71,22 +70,22 @@ int32_t help()
     return ret;
 } 
 
-int32_t shutdown()
+int shutdown()
 {
-    int32_t ret = -1;
+    int ret = -1;
     return ret;
 }
     
-int32_t mem_info()
+int mem_info()
 {
-    int32_t ret = 0;
+    int ret = 0;
     puts("Memory information binary\n");
     return ret;
 }
 
-int32_t version()
+int version()
 {
-    int32_t ret = 0;
+    int ret = 0;
     puts(
         "  _____          _   _  ____   _____  \n"
         " |_   _|   /\\   | \\ | |/ __ \\ / ____| \n"

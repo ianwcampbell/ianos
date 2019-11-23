@@ -2,9 +2,8 @@
 #define _BIN_H_
 
 #include "list.h"
-#include <stdint.h>
 
-typedef int32_t (*function_pointer_t)();
+typedef int (*function_pointer_t)();
 
 struct binary {
     char * name;
