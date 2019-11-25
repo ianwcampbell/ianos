@@ -1,77 +1,29 @@
 #include "bin.h"
-#include "list.h"
 #include "string.h"
 #include "stdio.h"
+#include "serial_num.h"
 #include <stddef.h>
 
-struct list_head binary_list;
-int added_binaries = 0;
+#define BIN         5
 
-int get_binary(char * binary)
-{
-    struct binary * tmp;
-    int internal_counter = 0;
-    
-    list_for_each_entry(tmp, &binary_list, list)
-    {
-        if(internal_counter > added_binaries - 1)
-        {
-            puts("Hey that is not a valid command...type 'help' for the available options...\n");
-            break;
-        } 
-        if(strcmp(tmp->name, binary) == 0)
-        {
-            return tmp->callback();
-        }
-        internal_counter++;
-    }
-    return 0;
-}
-
-int execute(char ** args, int num_args)
-{
-    int ret = 0;
-    for(int i = 0; i < num_args; i++)
-    {
-        ret = get_binary(args[i]); 
-    }
-    return ret;
-}
-
-void add_binary(char * name, function_pointer_t callback)
-{
-    puts("Added binary\n");
-    struct binary * bin = kmalloc(sizeof(struct binary));
-    bin->name = name;
-    bin->callback = callback;
-    list_add(&bin->list, &binary_list);
-    added_binaries++;
-    return;
-}
+static char * binary_locals[BIN] = {"shutdown\0", "help\0", "version_print\0", "mem_info\0", "get_serial\0"};
 
 int help()
 {
-    struct binary * tmp;
     int ret = 0;
-    int internal_counter = 0;
-
     puts("Here is the help menu\n");
-    list_for_each_entry(tmp, &binary_list, list)
+    for(int i = 0; i < BIN; i++)
     {
-        if(internal_counter > added_binaries - 1)
-        {
-            break;
-        }
         puts("\t");
-        puts(tmp->name);
+        puts(binary_locals[i]);
         puts("\n");
-        internal_counter++;
-    }
+    } 
     return ret;
 } 
 
 int shutdown()
 {
+    puts("Here is shutdown!!\n");
     int ret = -1;
     return ret;
 }
@@ -97,12 +49,45 @@ int version()
     return ret;
 }
 
-void setup_binaries()
+int get_binary(char * binary)
 {
-    add_binary("help", help);
-    add_binary("shutdown", shutdown);
-    add_binary("mem_info", mem_info);
-    add_binary("version_print", version);
-    return;
-} 
+    if(strcmp(binary, "mem_info") == 0)
+    {
+        return mem_info();
+    }
+    else if(strcmp(binary, "version_print") == 0)
+    {
+        return version();
+    }
+    else if(strcmp(binary, "help") == 0)
+    {
+        return help();
+    }
+    else if(strcmp(binary, "shutdown") == 0)
+    {
+        return shutdown();
+    }
+    else if(strcmp(binary, "get_serial") == 0)
+    {
+        return get_serial();
+    }
+    else
+    {
+        puts("Hey that binary was not found...try 'help'!\n");
+    }
+    return 0;
+}
+
+int execute(int num_args, char args[num_args][32])
+{
+    int ret = 0;
+    for(int i = 0; i < num_args; i++)
+    {
+        puts("Looping...here is the binary...");
+        puts(args[i]);
+        puts("\n");
+        ret = get_binary(args[i]); 
+    }
+    return ret;
+}
 

@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include <stddef.h>
 
 int get_spaces(char * str)
 {

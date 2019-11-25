@@ -4,11 +4,6 @@ char getc() {
     return uart_getc();
 }
 
-void putc(char c) {
-    uart_puts(&c);
-    return;
-}
-
 void puts(char * str) {
     uart_puts(str);
     return;

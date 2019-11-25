@@ -4,7 +4,7 @@ CC=$(CROSSPATH)gcc
 OBJCOPY=$(CROSSPATH)objcopy
 LINKER=$(CROSSPATH)ld
 OBJS = $(SRCS:.c=.o)
-CFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -O2 -ffreestanding -nostartfiles
 
 all: clean kernel8.img
 

@@ -1,17 +1,9 @@
 #include "uart.h"
 #include "mbox.h"
-#include "power.h"
 #include "stdio.h"
-#include "shell.h"
 
-void main()
+int get_serial()
 {
-    //char c[2];
-
-    // set up serial console
-    uart_init();
-    puts("Uart has been initialized...\n");
-    
     // get the board's unique serial number with a mailbox call
     mbox[0] = 8*4;                  // length of the message
     mbox[1] = MBOX_REQUEST;         // this is a request message
@@ -33,11 +25,8 @@ void main()
     else 
     {
         puts("Unable to query serial!\n");
+        return -1;
     }
 
-    puts("Starting up interactive shell....\n");
-    start_shell();
-    
-    puts("Shutting down...\n");
-    power_off();
+    return 0;
 }
