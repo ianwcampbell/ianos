@@ -2,11 +2,15 @@
 #include "string.h"
 #include "stdio.h"
 #include "serial_num.h"
+#include "delay.h"
+#include "power.h"
 #include <stddef.h>
 
-#define BIN         5
+#define BIN         7
 
-static char * binary_locals[BIN] = {"shutdown\0", "help\0", "version_print\0", "mem_info\0", "get_serial\0"};
+int default_wait = 1000000;
+
+static char * binary_locals[BIN] = {"shutdown\0", "help\0", "version_print\0", "mem_info\0", "get_serial\0", "wait\0", "reboot\0"};
 
 int help()
 {
@@ -70,6 +74,15 @@ int get_binary(char * binary)
     else if(strcmp(binary, "get_serial") == 0)
     {
         return get_serial();
+    }
+    else if(strcmp(binary, "wait") == 0)
+    {
+        wait_msec(default_wait);
+    }
+    else if(strcmp(binary, "reboot") == 0)
+    {
+        puts("Gotcha\n");
+        reset();    
     }
     else
     {

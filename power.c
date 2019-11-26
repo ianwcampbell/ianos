@@ -1,6 +1,7 @@
 #include "gpio.h"
 #include "mbox.h"
 #include "delay.h"
+#include "stdio.h"
 
 #define PM_RSTC         ((volatile unsigned int*)(MMIO_BASE+0x0010001C))
 #define PM_RSTS         ((volatile unsigned int*)(MMIO_BASE+0x00100020))
@@ -50,6 +51,7 @@ void power_off()
 
 void reset()
 {
+    puts("Inside reset...\n");
     unsigned int r;
 
     r = *PM_RSTS;

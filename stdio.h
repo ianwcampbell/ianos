@@ -6,6 +6,4 @@ void puts(char * s);
 
 void gets(char * buf, int buflen);
 
-//void printf(char * fmt, ...);
-
 #endif
