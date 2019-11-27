@@ -1,5 +1,5 @@
-#ifndef STDIO_H
-#define STDIO_H
+#ifndef _STDIO_H_
+#define _STDIO_H_
 
 char getc(void);
 void puts(char * s);

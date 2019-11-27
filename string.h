@@ -1,5 +1,5 @@
-#ifndef STRING_H_
-#define STRING_H_
+#ifndef _STRING_H_
+#define _STRING_H_
 
 char * strtok(char *str, const char* delim);
 int get_spaces(char * str);

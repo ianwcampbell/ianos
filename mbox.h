@@ -1,3 +1,6 @@
+#ifndef _MBOX_H_
+#define _MBOX_H_
+
 /* a properly aligned buffer */
 extern volatile unsigned int mbox[36];
 
@@ -21,3 +24,5 @@ extern volatile unsigned int mbox[36];
 #define MBOX_TAG_LAST           0
 
 int mbox_call(unsigned char ch);
+
+#endif
