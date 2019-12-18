@@ -1,8 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "stdio.h"
+#include <stddef.h>
 
-int32_t get_spaces(char * str)
+int get_spaces(char * str)
 {
     int i = 0;
     char *p = str;
