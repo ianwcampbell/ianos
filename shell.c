@@ -10,7 +10,7 @@
 
 char buffer[BUFSIZE];
 
-void zero_buf()
+static void zero_buf()
 {
     for(int i = 0; i < BUFSIZE; i++)
     {
@@ -19,7 +19,7 @@ void zero_buf()
     return;
 }
 
-void place_token(char buf[TOK_BUFSIZE], char * token)
+static void place_token(char buf[TOK_BUFSIZE], char * token)
 {
     int i = 0;
     while(token[i] != '\0')
@@ -30,7 +30,7 @@ void place_token(char buf[TOK_BUFSIZE], char * token)
     buf[i] = '\0';
 }
 
-void split_line(int num_tokens, char tokens[num_tokens][TOK_BUFSIZE])
+static void split_line(int num_tokens, char tokens[num_tokens][TOK_BUFSIZE])
 {
     int pos = 0;
     char * token;
@@ -46,7 +46,7 @@ void split_line(int num_tokens, char tokens[num_tokens][TOK_BUFSIZE])
     return;
 }
 
-void shell_loop()
+static void shell_loop()
 {
 	int status = 0;
     int num_tokens;
