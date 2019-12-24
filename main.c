@@ -3,6 +3,7 @@
 #include "power.h"
 #include "stdio.h"
 #include "shell.h"
+#include "rand.h"
 
 void main()
 {
@@ -10,6 +11,9 @@ void main()
     uart_init();
     puts("Uart has been initialized...\n");
     
+    rand_init();
+    puts("Random has been initialized...\n");
+
     // Start interactive shell
     puts("Starting up interactive shell....\n");
     start_shell();
