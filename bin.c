@@ -4,13 +4,15 @@
 #include "serial_num.h"
 #include "delay.h"
 #include "power.h"
+#include "rand.h"
+#include "uart.h"
 #include <stddef.h>
 
-#define BIN         7
+#define BIN         8
 
 int default_wait = 1000000;
 
-static char * binary_locals[BIN] = {"shutdown\0", "help\0", "version_print\0", "mem_info\0", "get_serial\0", "wait\0", "reboot\0"};
+static char * binary_locals[BIN] = {"shutdown\0", "help\0", "version_print\0", "mem_info\0", "get_serial\0", "wait\0", "reboot\0", "test_rand\0"};
 
 int help()
 {
@@ -53,6 +55,22 @@ int version()
     return ret;
 }
 
+int test_random()
+{
+    int ret = 0;
+    puts("Testing 0-10...\nRandomly generated:");
+    uart_hex(get_random_num(0, 10));
+    puts("\n");
+    puts("Testing 11-100...\nRandomly generated:");
+    uart_hex(get_random_num(11, 100));
+    puts("\n");
+    puts("Testing 101-1000...\nRandomly generated:");
+    uart_hex(get_random_num(101, 1000));
+    puts("\n");
+    
+    return ret;
+}
+
 int get_binary(char * binary)
 {
     if(strcmp(binary, "mem_info") == 0)
@@ -78,6 +96,10 @@ int get_binary(char * binary)
     else if(strcmp(binary, "wait") == 0)
     {
         wait_msec(default_wait);
+    }
+    else if(strcmp(binary, "test_rand") == 0)
+    {
+        test_random();
     }
     else if(strcmp(binary, "reboot") == 0)
     {
